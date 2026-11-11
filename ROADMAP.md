@@ -12,7 +12,8 @@ last_updated: 2026-11-11T09:15:00-07:00
 
 - <!-- id:r_dg001 status:done completed:2026-11-11 --> **Extract the games tile** - Parsers, card view model, card styles and icons copied into a Vite + React app with their tests.
 - <!-- id:r_dg002 status:done completed:2026-11-11 --> **Browser storage** - Every result kept in localStorage, with JSON export and an import that also reads JSON Lines files.
-- <!-- id:r_dg003 status:planned --> **Publish** - Create the public GitHub repo, enable Pages from Actions, and check the deployed site end to end (paste, copy for Slack over HTTPS, export, import).
+- <!-- id:r_dg003 status:done completed:2026-11-11 --> **Publish** - Public GitHub repo, Pages built from Actions, paste and history checked on the live site.
+- <!-- id:r_dg004 status:planned --> **Hands-on check of the live site** - Copy for Slack into Slack, Export, and Import of a real file, in a normal browser.
 
 <!-- category:features -->
 ## Features
