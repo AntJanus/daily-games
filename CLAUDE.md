@@ -36,9 +36,9 @@ npm run build      # typecheck, then dist/
 - **Hash routes** (`#/`, `#/game/<game>`) and `base: "./"` in `vite.config.ts` keep the build working at any GitHub
   Pages path without naming the repo. Icon paths are relative for the same reason.
 - **A changed share format** needs its parser and the fixture in `src/core/game-share.test.ts` updated, and the parser
-  must keep reading the old format, because stored results are parsed again on every load. Magnitudle's Daily Question
-  and Size It Up changed in November 2026 from "Magnitudle — <mode>" over a day to "<mode>" over `#<number>`, and their
-  parsers list both openings; Geography still reads only the dated one. The Farflung fixtures were built from the site's share code, not pasted; swap in a real
+  must keep reading the old format, because stored results are parsed again on every load. Every Magnitudle mode
+  changed in November 2026 from "Magnitudle — <mode>" over a day to "<mode>" over `#<number>`, and the Magnitudle
+  parser reads both. The Farflung fixtures were built from the site's share code, not pasted; swap in a real
   paste when one comes in.
 - **A new game** is a new entry in `GAMES`, a parser, a `SCALES` entry, its link, icon and names in `src/ui/games.ts`,
   and an icon in `public/games/`. TypeScript flags each missing record.

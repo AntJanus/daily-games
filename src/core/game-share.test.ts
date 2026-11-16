@@ -28,7 +28,20 @@ Score: 301/500
 🟥🟥🟥⬜⬜ 62
 
 https://magnitudle.com/size-it-up`;
-const MAGNITUDLE_GEOGRAPHY = `Magnitudle — Size It Up: Geography
+const MAGNITUDLE_GEOGRAPHY = `Size It Up: Geography
+#77
+
+Score: 224/500
+
+🟥🟥🟥🟥⬜ 84
+🟥🟥🟥⬜⬜ 59
+🟥🟥⬜⬜⬜ 38
+🟥⬜⬜⬜⬜ 13
+🟥🟥⬜⬜⬜ 30
+
+https://magnitudle.com/size-it-up/geography`;
+// Geography's share until November 2026, which saved scores still hold.
+const MAGNITUDLE_GEOGRAPHY_DATED = `Magnitudle — Size It Up: Geography
 2026-11-04
 
 Score: 305/500
@@ -106,17 +119,27 @@ describe("parseShare: magnitudle", () => {
   it("refuses text that is not a Magnitudle share", () => {
     expect(() => parseShare("magnitudle", KRILLION)).toThrow('Not a Magnitudle share: expected "Size It Up", a #<number> line, then "Score: <points>/<total>"');
     expect(() => parseShare("magnitudle", MAGNITUDLE_GEOGRAPHY)).toThrow("Not a Magnitudle share");
+    expect(() => parseShare("magnitudle", MAGNITUDLE_GEOGRAPHY_DATED)).toThrow("Not a Magnitudle share");
     expect(() => parseShare("magnitudle", "Size It Up\n#99\n\nScore: lots")).toThrow("Not a Magnitudle share");
   });
 });
 
 describe("parseShare: magnitudle-geography", () => {
-  it("reads the day and the score out of its total", () => {
-    expect(parseShare("magnitudle-geography", MAGNITUDLE_GEOGRAPHY)).toEqual({ puzzle: "2026-11-04", score: "305/500", highlights: ["100", "79", "26", "0", "100"] });
+  it("reads the puzzle number, the score out of its total, and each round", () => {
+    expect(parseShare("magnitudle-geography", MAGNITUDLE_GEOGRAPHY)).toEqual({ puzzle: "#77", score: "224/500", highlights: ["84", "59", "38", "13", "30"] });
+  });
+
+  it("still reads the earlier share, titled with the game and named by its day", () => {
+    expect(parseShare("magnitudle-geography", MAGNITUDLE_GEOGRAPHY_DATED)).toEqual({ puzzle: "2026-11-04", score: "305/500", highlights: ["100", "79", "26", "0", "100"] });
+  });
+
+  it("refuses a title from one format over a puzzle line from the other", () => {
+    expect(() => parseShare("magnitudle-geography", "Size It Up: Geography\n2026-11-04\n\nScore: 305/500")).toThrow("Not a Magnitudle Geography share");
+    expect(() => parseShare("magnitudle-geography", "Magnitudle — Size It Up: Geography\n#77\n\nScore: 224/500")).toThrow("Not a Magnitudle Geography share");
   });
 
   it("refuses the other Magnitudle mode", () => {
-    expect(() => parseShare("magnitudle-geography", MAGNITUDLE)).toThrow('Not a Magnitudle Geography share: expected "Magnitudle — Size It Up: Geography", a YYYY-MM-DD line, then "Score: <points>/<total>"');
+    expect(() => parseShare("magnitudle-geography", MAGNITUDLE)).toThrow('Not a Magnitudle Geography share: expected "Size It Up: Geography", a #<number> line, then "Score: <points>/<total>"');
     expect(() => parseShare("magnitudle-geography", MAGNITUDLE_DATED)).toThrow("Not a Magnitudle Geography share");
   });
 });
