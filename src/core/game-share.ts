@@ -91,7 +91,7 @@ const parsers: Record<Game, Parser> = {
     { title: "Daily Question", puzzle: "number" },
     { title: "Magnitudle — Daily Question", puzzle: "day" },
   ),
-  magnitudle: magnitudle("Magnitudle", { title: "Magnitudle — Size It Up", puzzle: "day" }),
+  magnitudle: magnitudle("Magnitudle", { title: "Size It Up", puzzle: "number" }, { title: "Magnitudle — Size It Up", puzzle: "day" }),
   "magnitudle-geography": magnitudle("Magnitudle Geography", { title: "Magnitudle — Size It Up: Geography", puzzle: "day" }),
   krillion: {
     name: "Krillion",
