@@ -34,18 +34,27 @@ const GEOGUESSR = `1. Sri Lanka: 4,997 pts, 889 yd, 1 min, 15 sec, 5 steps
 5. Poland: 3,686 pts, 283 miles, 12 sec, 0 steps
 Total: 10,356 pts, 6,458 miles, 8 min, 1 sec, 81 steps`;
 const CHAINLE = "Chainle #77 · 3,096 🔗\nBeat 46% of players\n🟨🟧🟧🟧🟨\nhttps://chainle.io";
-// Built from each game's share code (farflung.game's camp-kit chunk, magnitudle.com's buildGameSharePayload), since
-// no paste was at hand; Wordle's is its long-standing format. Replace them with real pastes when they come in.
-const FARFLUNG = "Farflung #40 · 370/500 km\nCommon · Rare · Miss · Uncommon · Farflung\nhttps://farflung.game/s/k7m2qx?e=40";
-const FARFLUNG_SENTENCE = "Farflung #40 · 1,000/1,000 km* · ⌕\nFurther than 72% of today's players. Can you reach the edge too?\nhttps://farflung.game";
-const MAGNITUDLE_DAILY = `Magnitudle — Daily Question
-2026-11-11 · S03 · Q12
+const MAGNITUDLE_DAILY = `Daily Question
+#264
 
-Score: 87/100
+Score: 99/100
 
-🟥🟥🟥🟥⬜ 87
+🟥🟥🟥🟥🟥 99
 
 https://magnitudle.com/daily`;
+// The Daily Question's share until November 2026, which saved scores still hold.
+const MAGNITUDLE_DAILY_DATED = `Magnitudle — Daily Question
+2026-11-11 · S24 · Q10
+
+Score: 58/100
+
+🟥🟥🟥⬜⬜ 58
+
+https://magnitudle.com/daily`;
+// Built from the game's share code (farflung.game's camp-kit chunk), since no paste was at hand; Wordle's is its
+// long-standing format. Replace them with real pastes when they come in.
+const FARFLUNG = "Farflung #40 · 370/500 km\nCommon · Rare · Miss · Uncommon · Farflung\nhttps://farflung.game/s/k7m2qx?e=40";
+const FARFLUNG_SENTENCE = "Farflung #40 · 1,000/1,000 km* · ⌕\nFurther than 72% of today's players. Can you reach the edge too?\nhttps://farflung.game";
 const WORDLE = "Wordle 1,606 4/6*\n\n⬜🟨⬜⬜⬜\n⬜⬜🟩🟨⬜\n🟩🟩🟩⬜🟩\n🟩🟩🟩🟩🟩";
 
 describe("parseShare: krillion", () => {
@@ -132,13 +141,23 @@ describe("parseShare: farflung", () => {
 });
 
 describe("parseShare: magnitudle-daily", () => {
-  it("reads the day and the score; its one round is the score, so it has no highlights", () => {
-    expect(parseShare("magnitudle-daily", MAGNITUDLE_DAILY)).toEqual({ puzzle: "2026-11-11", score: "87/100", highlights: [] });
+  it("reads the question number and the score; its one round is the score, so it has no highlights", () => {
+    expect(parseShare("magnitudle-daily", MAGNITUDLE_DAILY)).toEqual({ puzzle: "#264", score: "99/100", highlights: [] });
+  });
+
+  it("still reads the earlier share, titled with the game and named by its day", () => {
+    expect(parseShare("magnitudle-daily", MAGNITUDLE_DAILY_DATED)).toEqual({ puzzle: "2026-11-11", score: "58/100", highlights: [] });
+  });
+
+  it("refuses a title from one format over a puzzle line from the other", () => {
+    expect(() => parseShare("magnitudle-daily", "Daily Question\n2026-11-11 · S24 · Q10\n\nScore: 58/100")).toThrow("Not a Magnitudle Daily Question share");
+    expect(() => parseShare("magnitudle-daily", "Magnitudle — Daily Question\n#264\n\nScore: 99/100")).toThrow("Not a Magnitudle Daily Question share");
   });
 
   it("refuses the Size It Up modes", () => {
-    expect(() => parseShare("magnitudle-daily", MAGNITUDLE)).toThrow('Not a Magnitudle Daily Question share: expected "Magnitudle — Daily Question", a YYYY-MM-DD line, then "Score: <points>/<total>"');
+    expect(() => parseShare("magnitudle-daily", MAGNITUDLE)).toThrow('Not a Magnitudle Daily Question share: expected "Daily Question", a #<number> line, then "Score: <points>/<total>"');
     expect(() => parseShare("magnitudle", MAGNITUDLE_DAILY)).toThrow("Not a Magnitudle share");
+    expect(() => parseShare("magnitudle", MAGNITUDLE_DAILY_DATED)).toThrow("Not a Magnitudle share");
   });
 });
 

@@ -35,8 +35,11 @@ npm run build      # typecheck, then dist/
 - **"Today" is the browser's local day**, read when the page renders.
 - **Hash routes** (`#/`, `#/game/<game>`) and `base: "./"` in `vite.config.ts` keep the build working at any GitHub
   Pages path without naming the repo. Icon paths are relative for the same reason.
-- **A changed share format** needs its parser and the fixture in `src/core/game-share.test.ts` updated. The Farflung and Magnitudle Daily Question fixtures were built from each site's share code, not
-  pasted; swap in a real paste when one comes in.
+- **A changed share format** needs its parser and the fixture in `src/core/game-share.test.ts` updated, and the parser
+  must keep reading the old format, because stored results are parsed again on every load. The Magnitudle Daily Question
+  changed in November 2026 from "Magnitudle — Daily Question" over a day to "Daily Question" over `#<number>`, and its
+  parser lists both openings. The Farflung fixtures were built from the site's share code, not pasted; swap in a real
+  paste when one comes in.
 - **A new game** is a new entry in `GAMES`, a parser, a `SCALES` entry, its link, icon and names in `src/ui/games.ts`,
   and an icon in `public/games/`. TypeScript flags each missing record.
 - **A missed Wordle counts as 7** (`WORDLE_MISS`) in the chart, the average and the distribution, and prints as X.

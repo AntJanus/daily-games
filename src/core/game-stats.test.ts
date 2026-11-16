@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { formatValue, shareStats } from "./game-stats";
 
 const MAGNITUDLE = "Magnitudle — Size It Up\n2026-11-04\n\nScore: 301/500\n\n🟥🟥🟥🟥⬜ 77\n🟥🟥🟥⬜⬜ 60\n🟥🟥🟥🟥⬜ 86\n🟥⬜⬜⬜⬜ 16\n🟥🟥🟥⬜⬜ 62\n\nhttps://magnitudle.com/size-it-up";
-const MAGNITUDLE_DAILY = "Magnitudle — Daily Question\n2026-11-11 · S03 · Q12\n\nScore: 87/100\n\n🟥🟥🟥🟥⬜ 87\n\nhttps://magnitudle.com/daily";
+const MAGNITUDLE_DAILY = "Daily Question\n#264\n\nScore: 99/100\n\n🟥🟥🟥🟥🟥 99\n\nhttps://magnitudle.com/daily";
 const GEOGUESSR = "1. Sri Lanka: 4,997 pts, 889 yd, 1 min, 15 sec, 5 steps\n2. Poland: 3,686 pts, 283 miles, 12 sec, 0 steps\nTotal: 8,683 pts, 284 miles, 1 min, 27 sec, 5 steps";
 
 describe("shareStats", () => {
@@ -11,7 +11,7 @@ describe("shareStats", () => {
   });
 
   it("has no rounds for a single-round Daily Question", () => {
-    expect(shareStats("magnitudle-daily", MAGNITUDLE_DAILY)).toEqual({ value: 87, max: 100, percentile: null, rounds: [] });
+    expect(shareStats("magnitudle-daily", MAGNITUDLE_DAILY)).toEqual({ value: 99, max: 100, percentile: null, rounds: [] });
   });
 
   it("reads Krillion's plain score", () => {

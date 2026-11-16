@@ -23,15 +23,26 @@ const linesOf = (text: string) => text.split("\n").map((line) => line.trim());
 
 const emojiRows = (text: string) => linesOf(text).filter((line) => EMOJI_ROW.test(line));
 
-// Each Magnitudle mode titles its share "Magnitudle — <mode>", then the day (the Daily Question adds its season and
-// question after it), then the total, then a row per round. A single round is the score itself, so it is no highlight.
-const magnitudle = (name: string, title: string): Parser => {
-  const pattern = new RegExp(String.raw`^${title}\s*\n(\d{4}-\d{2}-\d{2})(?: · [^\n]*)?\s*\n\s*Score: (\d+\/\d+)\s*(\n|$)`, "u");
+// The line under a Magnitudle title names the puzzle: its day (the Daily Question once added its season and question
+// after it) or its number.
+const MAGNITUDLE_PUZZLE = {
+  day: { pattern: String.raw`(\d{4}-\d{2}-\d{2})(?: · [^\n]*)?`, says: "YYYY-MM-DD" },
+  number: { pattern: String.raw`(#\d+)`, says: "#<number>" },
+};
+
+type MagnitudleOpening = { title: string; puzzle: keyof typeof MAGNITUDLE_PUZZLE };
+
+// Each Magnitudle mode opens its share with a title and a puzzle line, then the total, then a row per round. A single
+// round is the score itself, so it is no highlight. A mode whose share changed lists the openings it used before,
+// because saved scores keep the share they were pasted with.
+const magnitudle = (name: string, current: MagnitudleOpening, ...earlier: MagnitudleOpening[]): Parser => {
+  const patterns = [current, ...earlier].map(({ title, puzzle }) =>
+    new RegExp(String.raw`^${title}\s*\n${MAGNITUDLE_PUZZLE[puzzle].pattern}\s*\n\s*Score: (\d+\/\d+)\s*(\n|$)`, "u"));
   return {
     name,
-    expected: `"${title}", a YYYY-MM-DD line, then "Score: <points>/<total>"`,
+    expected: `"${current.title}", a ${MAGNITUDLE_PUZZLE[current.puzzle].says} line, then "Score: <points>/<total>"`,
     parse: (text) => {
-      const match = text.match(pattern);
+      const match = patterns.map((pattern) => text.match(pattern)).find(Boolean);
       if (!match) return null;
       const rounds = linesOf(text).flatMap((line) => line.match(MAGNITUDLE_ROUND)?.[1] ?? []);
       return { puzzle: match[1], score: match[2], highlights: rounds.length > 1 ? rounds : [] };
@@ -75,9 +86,13 @@ const parseWordle = (text: string): ParsedShare | null => {
 };
 
 const parsers: Record<Game, Parser> = {
-  "magnitudle-daily": magnitudle("Magnitudle Daily Question", "Magnitudle — Daily Question"),
-  magnitudle: magnitudle("Magnitudle", "Magnitudle — Size It Up"),
-  "magnitudle-geography": magnitudle("Magnitudle Geography", "Magnitudle — Size It Up: Geography"),
+  "magnitudle-daily": magnitudle(
+    "Magnitudle Daily Question",
+    { title: "Daily Question", puzzle: "number" },
+    { title: "Magnitudle — Daily Question", puzzle: "day" },
+  ),
+  magnitudle: magnitudle("Magnitudle", { title: "Magnitudle — Size It Up", puzzle: "day" }),
+  "magnitudle-geography": magnitudle("Magnitudle Geography", { title: "Magnitudle — Size It Up: Geography", puzzle: "day" }),
   krillion: {
     name: "Krillion",
     expected: '"Krillion #<number>" then the score on the next line',
