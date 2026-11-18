@@ -32,6 +32,11 @@ describe("shareStats", () => {
       .toEqual({ value: 1000, max: 1000, percentile: 72, rounds: [] });
   });
 
+  it("reads FactMap's total, its maximum and each round", () => {
+    expect(shareStats("factmap", "FactMap · Nov 18, 2026 🌍\n\n🔴 219\n🟠 508\n🔴 184\n🟠 524\n🟠 356\n\n1,791 / 5,000 · Wanderer\nhttps://www.factmap.world/"))
+      .toEqual({ value: 1791, max: 5000, percentile: null, rounds: [219, 508, 184, 524, 356] });
+  });
+
   it("reads Wordle's guesses, and counts a failed puzzle as a seventh guess", () => {
     expect(shareStats("wordle", "Wordle 1,606 4/6*\n\n🟩🟩🟩🟩🟩")).toEqual({ value: 4, max: 6, percentile: null, rounds: [] });
     expect(shareStats("wordle", "Wordle 1,607 X/6\n\n⬜⬜⬜⬜⬜")).toEqual({ value: 7, max: 6, percentile: null, rounds: [] });

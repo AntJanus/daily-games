@@ -81,6 +81,8 @@ https://magnitudle.com/daily`;
 // long-standing format. Replace them with real pastes when they come in.
 const FARFLUNG = "Farflung #40 · 370/500 km\nCommon · Rare · Miss · Uncommon · Farflung\nhttps://farflung.game/s/k7m2qx?e=40";
 const FARFLUNG_SENTENCE = "Farflung #40 · 1,000/1,000 km* · ⌕\nFurther than 72% of today's players. Can you reach the edge too?\nhttps://farflung.game";
+// A real paste, 2026-11-18.
+const FACTMAP = "FactMap · Nov 18, 2026 🌍\n\n🔴 219\n🟠 508\n🔴 184\n🟠 524\n🟠 356\n\n1,791 / 5,000 · Wanderer\nhttps://www.factmap.world/";
 const WORDLE = "Wordle 1,606 4/6*\n\n⬜🟨⬜⬜⬜\n⬜⬜🟩🟨⬜\n🟩🟩🟩⬜🟩\n🟩🟩🟩🟩🟩";
 
 describe("parseShare: krillion", () => {
@@ -183,6 +185,18 @@ describe("parseShare: farflung", () => {
     expect(() => parseShare("farflung", WORDLE)).toThrow('Not a Farflung share: expected "Farflung #<number> · <km>/<km> km"');
     expect(() => parseShare("farflung", "Farflung ∞ · 370/500 km\nCan you get further?")).toThrow("Not a Farflung share");
     expect(() => parseShare("farflung", "Farflung · Expedition #40 replay · unranked\n370 km")).toThrow("Not a Farflung share");
+  });
+});
+
+describe("parseShare: factmap", () => {
+  it("reads the day, the total out of the maximum, the rank and each round", () => {
+    expect(parseShare("factmap", FACTMAP)).toEqual({ puzzle: "Nov 18, 2026", score: "1,791/5,000", highlights: ["Wanderer", "219", "508", "184", "524", "356"] });
+  });
+
+  it("refuses text that is not a FactMap share", () => {
+    expect(() => parseShare("factmap", WORDLE)).toThrow('Not a FactMap share: expected "FactMap · <date>", a round per line, then "<points> / <total> · <rank>"');
+    expect(() => parseShare("factmap", "FactMap · Nov 18, 2026 🌍\n\n🔴 219\nhttps://www.factmap.world/")).toThrow("Not a FactMap share");
+    expect(() => parseShare("factmap", "FactMap · Nov 18, 2026 🌍\n\n1,791 / 5,000 · Wanderer")).toThrow("Not a FactMap share");
   });
 });
 

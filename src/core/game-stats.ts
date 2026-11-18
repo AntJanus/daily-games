@@ -15,6 +15,7 @@ export const SCALES: Record<Game, Scale> = {
   chainle: { unit: "points", better: "higher" },
   geoguessr: { unit: "points", better: "higher" },
   farflung: { unit: "km", better: "higher" },
+  factmap: { unit: "points", better: "higher" },
   wordle: { unit: "guesses", better: "lower" },
 };
 
@@ -24,7 +25,7 @@ export const WORDLE_MISS = 7;
 const POINTS = String.raw`\d{1,3}(?:,\d{3})*`;
 const SCORE = new RegExp(String.raw`^(X|${POINTS})(?:\/(${POINTS}))?(?: (?:pts|km))?$`, "u");
 const PERCENT = /^(?:beat|further than) (\d+)%$/u;
-const ROUND = /^\d+$/u;
+const ROUND = new RegExp(String.raw`^${POINTS}$`, "u");
 
 const toNumber = (points: string) => Number(points.replaceAll(",", ""));
 
@@ -37,7 +38,9 @@ export const shareStats = (game: Game, share: string): ShareStats => {
     value: match[1] === "X" ? WORDLE_MISS : toNumber(match[1]),
     max: match[2] ? toNumber(match[2]) : null,
     percentile: percent.length ? Number(percent[0]) : null,
-    rounds: game.startsWith("magnitudle") ? highlights.filter((highlight) => ROUND.test(highlight)).map(Number) : [],
+    rounds: game.startsWith("magnitudle") || game === "factmap"
+      ? highlights.filter((highlight) => ROUND.test(highlight)).map(toNumber)
+      : [],
   };
 };
 

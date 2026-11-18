@@ -3,7 +3,7 @@
 Paste the share text from your daily games, see today's scores as cards, copy them for Slack, and watch each game
 over time. Everything is saved in your browser's `localStorage`: there is no account and no server.
 
-Games: Magnitudle (Daily Question, Size It Up, Geography), Krillion, Chainle, GeoGuessr, Farflung and Wordle.
+Games: Magnitudle (Daily Question, Size It Up, Geography), Krillion, Chainle, GeoGuessr, Farflung, FactMap and Wordle.
 
 ## Use
 

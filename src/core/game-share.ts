@@ -15,6 +15,9 @@ const GEOGUESSR_TOTAL = new RegExp(String.raw`^Total: (${POINTS}) pts\b`, "u");
 const FARFLUNG = new RegExp(String.raw`^Farflung #(\d+) · (${POINTS}\/${POINTS} km)\**(?: · ⌕)?\s*(\n|$)`, "u");
 const FARFLUNG_PINS = /^(?:Miss|Common|Well known|Uncommon|Rare|Elusive|Farflung)(?: · (?:Miss|Common|Well known|Uncommon|Rare|Elusive|Farflung))*$/u;
 const FARFLUNG_FURTHER = /^Further than (\d+)% of /u;
+const FACTMAP = /^FactMap · ([A-Z][a-z]{2} \d{1,2}, \d{4})\b/u;
+const FACTMAP_ROUND = new RegExp(String.raw`^[\p{Extended_Pictographic}️]+ (${POINTS})$`, "u");
+const FACTMAP_TOTAL = new RegExp(String.raw`^(${POINTS}) \/ (${POINTS}) · (.+)$`, "u");
 const WORDLE = new RegExp(String.raw`^Wordle (${POINTS}) ([1-6X]\/6)(\*?)\s*(\n|$)`, "u");
 const EMOJI_ROW = /^[\p{Extended_Pictographic}️‍]+$/u;
 const MAGNITUDLE_ROUND = /^[\p{Extended_Pictographic}️]+ (\d+)$/u;
@@ -75,6 +78,16 @@ const parseFarflung = (text: string): ParsedShare | null => {
   return { puzzle: `#${match[1]}`, score: match[2], highlights };
 };
 
+// The title names the day, then a coloured dot and the points for each round, then the total and the rank it earned.
+const parseFactMap = (text: string): ParsedShare | null => {
+  const match = text.match(FACTMAP);
+  const lines = linesOf(text);
+  const total = lines.map((line) => line.match(FACTMAP_TOTAL)).find(Boolean);
+  const rounds = lines.flatMap((line) => line.match(FACTMAP_ROUND)?.[1] ?? []);
+  if (!match || !total || rounds.length === 0) return null;
+  return { puzzle: match[1], score: `${total[1]}/${total[2]}`, highlights: [total[3], ...rounds] };
+};
+
 const parseWordle = (text: string): ParsedShare | null => {
   const match = text.match(WORDLE);
   return match ? { puzzle: `#${match[1]}`, score: match[2], highlights: match[3] ? ["hard mode"] : [] } : null;
@@ -99,6 +112,11 @@ const parsers: Record<Game, Parser> = {
     parse: parseGeoGuessr,
   },
   farflung: { name: "Farflung", expected: '"Farflung #<number> · <km>/<km> km"', parse: parseFarflung },
+  factmap: {
+    name: "FactMap",
+    expected: '"FactMap · <date>", a round per line, then "<points> / <total> · <rank>"',
+    parse: parseFactMap,
+  },
   wordle: { name: "Wordle", expected: '"Wordle <number> <guesses>/6"', parse: parseWordle },
 };
 

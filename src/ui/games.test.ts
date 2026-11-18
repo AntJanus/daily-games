@@ -5,6 +5,7 @@ import { buildGameRows, dailyScoresText, dayLabel, localDate, slackScores } from
 const KRILLION = "Krillion #112 🦐\n410\n\n🐟🦑🏮🦑🏮🐟🦑";
 const CHAINLE = "Chainle #77 · 3,096 🔗\nBeat 46% of players\n🟨🟧🟧🟧🟨\nhttps://chainle.io";
 const FARFLUNG = "Farflung #40 · 370/500 km\nCommon · Rare · Miss\nhttps://farflung.game/s/k7m2qx?e=40";
+const FACTMAP = "FactMap · Nov 18, 2026 🌍\n\n🔴 219\n🟠 508\n\n1,791 / 5,000 · Wanderer\nhttps://www.factmap.world/";
 const GEOGUESSR = "1. Poland: 3,686 pts, 283 miles, 12 sec, 0 steps\nTotal: 3,686 pts, 283 miles, 12 sec, 0 steps";
 
 const scores: GameScore[] = [
@@ -12,6 +13,7 @@ const scores: GameScore[] = [
   { date: "2026-11-04", game: "krillion", score: "410", share: KRILLION },
   { date: "2026-11-04", game: "chainle", score: "3,096", share: CHAINLE },
   { date: "2026-11-04", game: "farflung", score: "370/500 km", share: FARFLUNG },
+  { date: "2026-11-04", game: "factmap", score: "1,791/5,000", share: FACTMAP },
 ];
 
 describe("buildGameRows", () => {
@@ -24,6 +26,7 @@ describe("buildGameRows", () => {
       { game: "chainle", name: "Chainle", href: "https://chainle.io", icon: "games/chainle.png", title: "Chainle", subtitle: "#77", score: "3,096", puzzle: "#77", highlights: ["beat 46%", "🟨🟧🟧🟧🟨"] },
       { game: "geoguessr", name: "GeoGuessr", href: "https://www.geoguessr.com", icon: "games/geoguessr.png", title: "GeoGuessr", subtitle: null, score: "3,686 pts", puzzle: null, highlights: ["best: Poland 3,686"] },
       { game: "farflung", name: "Farflung", href: "https://farflung.game", icon: "games/farflung.png", title: "Farflung", subtitle: "#40", score: "370/500 km", puzzle: "#40", highlights: ["Common · Rare · Miss"] },
+      { game: "factmap", name: "FactMap", href: "https://www.factmap.world", icon: "games/factmap.png", title: "FactMap", subtitle: null, score: "1,791/5,000", puzzle: "Nov 18, 2026", highlights: ["Wanderer", "219", "508"] },
       { game: "wordle", name: "Wordle", href: "https://www.nytimes.com/games/wordle", icon: "games/wordle.png", title: "Wordle", subtitle: null, score: null, puzzle: null, highlights: [] },
     ]);
   });
@@ -41,6 +44,8 @@ describe("dailyScoresText", () => {
       `GeoGuessr\n${GEOGUESSR}`,
       "",
       FARFLUNG,
+      "",
+      FACTMAP,
     ].join("\n"));
   });
 
@@ -63,6 +68,7 @@ describe("slackScores", () => {
       "**Chainle** 3,096 · beat 46% · 🟨🟧🟧🟧🟨",
       "**GeoGuessr** 3,686 pts · best: Poland 3,686",
       "**Farflung** 370/500 km · Common · Rare · Miss",
+      "**FactMap** 1,791/5,000 · Wanderer · 219 · 508",
     ].join("\n"));
   });
 
@@ -81,7 +87,7 @@ describe("slackScores", () => {
 describe("buildGameRows subtitles", () => {
   it("titles each card by its puzzle number once played, and Magnitudle by its mode, never by a date", () => {
     const magnitudle: GameScore = { date: "2026-11-04", game: "magnitudle", score: "301/500", share: "Magnitudle — Size It Up\n2026-11-04\n\nScore: 301/500" };
-    expect(buildGameRows([magnitudle]).map((row) => row.subtitle)).toEqual(["Daily Question", "Size It Up", "Geography", null, null, null, null, null]);
+    expect(buildGameRows([magnitudle]).map((row) => row.subtitle)).toEqual(["Daily Question", "Size It Up", "Geography", null, null, null, null, null, null]);
   });
 });
 

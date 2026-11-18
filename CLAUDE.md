@@ -40,6 +40,8 @@ npm run build      # typecheck, then dist/
   changed in November 2026 from "Magnitudle — <mode>" over a day to "<mode>" over `#<number>`, and the Magnitudle
   parser reads both. The Farflung fixtures were built from the site's share code, not pasted; swap in a real
   paste when one comes in.
+  FactMap's site sits behind a bot checkpoint and publishes no rules, so its parser is built from one real paste
+  (2026-11-18) and its 48px icon came from Google's favicon service, not the site.
 - **A new game** is a new entry in `GAMES`, a parser, a `SCALES` entry, its link, icon and names in `src/ui/games.ts`,
   and an icon in `public/games/`. TypeScript flags each missing record.
 - **A missed Wordle counts as 7** (`WORDLE_MISS`) in the chart, the average and the distribution, and prints as X.

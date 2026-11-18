@@ -9,13 +9,14 @@ const LINKS: Record<Game, string> = {
   chainle: "https://chainle.io",
   geoguessr: "https://www.geoguessr.com",
   farflung: "https://farflung.game",
+  factmap: "https://www.factmap.world",
   wordle: "https://www.nytimes.com/games/wordle",
 };
 
 // GeoGuessr's share lists rounds without saying which game they came from.
 const NAMES_ITSELF: Record<Game, boolean> = {
   "magnitudle-daily": true, magnitudle: true, "magnitudle-geography": true, krillion: true, chainle: true, geoguessr: false,
-  farflung: true, wordle: true,
+  farflung: true, factmap: true, wordle: true,
 };
 
 // Each site's apple-touch icon, saved in public/games so the page never calls the sites to draw them.
@@ -27,6 +28,7 @@ const ICONS: Record<Game, string> = {
   chainle: "games/chainle.png",
   geoguessr: "games/geoguessr.png",
   farflung: "games/farflung.png",
+  factmap: "games/factmap.png",
   wordle: "games/wordle.png",
 };
 
