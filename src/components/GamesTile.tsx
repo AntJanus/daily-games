@@ -54,11 +54,13 @@ function GameCard({ row, onSave }: CardProps) {
   return (
     <li className="ov-game" data-played={played}>
       <div className="ov-game-head">
-        <img className="ov-game-icon" src={row.icon} alt="" width={36} height={36} />
-        <div className="ov-game-title">
-          <b>{row.title}</b>
-          {row.subtitle && <span>{row.subtitle}</span>}
-        </div>
+        <a className="ov-game-link" href={row.href} target="_blank" rel="noreferrer" title={`Open ${row.name} in a new tab`}>
+          <img className="ov-game-icon" src={row.icon} alt="" width={36} height={36} />
+          <div className="ov-game-title">
+            <b>{row.title}</b>
+            {row.subtitle && <span>{row.subtitle}</span>}
+          </div>
+        </a>
         {played && <span className="ov-game-check" aria-label="Played">✓</span>}
       </div>
       {played && !replacing && (

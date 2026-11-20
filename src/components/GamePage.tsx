@@ -37,11 +37,13 @@ export function GamePage({ game, scores, today }: { game: Game; scores: GameScor
   return (
     <>
       <section className="ov-tile gh-head">
-        <img src={history.icon} alt="" width={48} height={48} />
-        <div>
-          <h1>{history.title}</h1>
-          {history.subtitle && <span>{history.subtitle}</span>}
-        </div>
+        <a className="gh-game-link" href={history.href} target="_blank" rel="noreferrer" title={`Open ${history.name} in a new tab`}>
+          <img src={history.icon} alt="" width={48} height={48} />
+          <div>
+            <h1>{history.title}</h1>
+            {history.subtitle && <span>{history.subtitle}</span>}
+          </div>
+        </a>
         <a className="btn btn-lg" href={history.href} target="_blank" rel="noreferrer">Play ↗</a>
       </section>
       <div className="gh-stats">
